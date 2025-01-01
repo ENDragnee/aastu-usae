@@ -1,9 +1,11 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
-import { RegistrationForm } from '../components/RegistrationForm';
-import { ParticipantTable } from '../components/ParticipantTable';
+import { RegistrationForm } from '@/components/RegistrationForm';
+import { ParticipantTable } from '@/components/ParticipantTable';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { SessionProvider } from "next-auth/react";
+
 
 interface Participant {
   id: string;
