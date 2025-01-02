@@ -4,6 +4,9 @@ import React, { useState, useEffect } from 'react';
 import { RegistrationForm } from '../components/RegistrationForm';
 import { ParticipantTable } from '../components/ParticipantTable';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { signOut } from 'next-auth/react';
+import { Button } from "@/components/ui/button"
+
 
 interface Participant {
   id: string;
@@ -27,6 +30,9 @@ export default function Home() {
   const fetchParticipants = async () => {
     try {
       const response = await fetch('/api/participants');
+      if (!response.ok) {
+        throw new Error('Failed to fetch participants');
+      }
       const data = await response.json();
       setParticipants(data);
     } catch (error) {
@@ -34,65 +40,49 @@ export default function Home() {
     }
   };
 
-  const handleSubmit = async (data: Participant) => {
+  const handleDelete = async (id: number) => {
     try {
-      const method = data.id ? 'PUT' : 'POST';
-      const url = data.id ? `/api/participants/${data.id}` : '/api/participants';
-      const response = await fetch(url, {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-      if (response.ok) {
-        fetchParticipants();
-        setEditingParticipant(null);
-        setActiveTab("manage");
-      }
-    } catch (error) {
-      console.error('Error submitting participant:', error);
-    }
-  };
-
-  const handleDelete = async (id: string) => {
-    try {
-      const response = await fetch(`/api/participants/${id}`, {
+      const response = await fetch(`/api/participants?id=${id}`, {
         method: 'DELETE',
       });
-      if (response.ok) {
-        fetchParticipants();
+
+      if (!response.ok) {
+        throw new Error('Failed to delete participant');
       }
+
+      fetchParticipants();
     } catch (error) {
       console.error('Error deleting participant:', error);
     }
   };
 
-  const handleEdit = (participant: Participant) => {
-    setEditingParticipant(participant);
-    setActiveTab("register");
-  };
-
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8 text-center">Sports Festival Management</h1>
+      <h1 className="text-3xl font-bold mb-8 text-center flex flex-auto">
+        <p>Sports Festival Management</p>
+        <Button
+          className="ml-auto"
+          onClick={() => signOut()} 
+        >
+          Sign Out
+        </Button>
+
+      </h1>
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="register">Registration</TabsTrigger>
           <TabsTrigger value="manage">Manage Participants</TabsTrigger>
         </TabsList>
         <TabsContent value="register">
-          <RegistrationForm onSubmit={handleSubmit} editingParticipant={editingParticipant} />
+          <RegistrationForm editingParticipant={editingParticipant} />
         </TabsContent>
         <TabsContent value="manage">
           <ParticipantTable
             participants={participants}
             onDelete={handleDelete}
-            onEdit={handleEdit}
           />
         </TabsContent>
       </Tabs>
     </div>
   );
 }
-

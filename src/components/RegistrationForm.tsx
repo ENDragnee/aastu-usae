@@ -34,30 +34,39 @@ const responsibilities = [
 ];
 
 interface RegistrationFormProps {
-  onSubmit: (data: FormInputs) => void;
   editingParticipant?: FormInputs | null;
 }
 
-export function RegistrationForm({ onSubmit, editingParticipant }: RegistrationFormProps) {
+export function RegistrationForm({ editingParticipant }: RegistrationFormProps) {
   const { data: session } = useSession();
-  const { register, handleSubmit, formState: { errors }, reset, setValue, watch } = useForm<FormInputs>();
+  const { register, handleSubmit, formState: { errors }, reset, setValue, watch } = useForm<FormInputs>({
+    defaultValues: {
+      responsibility: '',
+    },
+    mode: 'onChange',
+    reValidateMode: 'onChange',
+  }
+  );
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const [lastResponsibility, setLastResponsibility] = useState<string>(
+    responsibilities[0] // Default to the first responsibility in the list
+  );
   useEffect(() => {
     if (editingParticipant) {
       reset(editingParticipant);
       setPhotoPreview(editingParticipant.photo as string);
+      setLastResponsibility(editingParticipant.responsibility); // Set initial responsibility from the participant
     } else {
-      reset();
+      reset({ responsibility: lastResponsibility });
       setPhotoPreview(null);
     }
-    
-    // Set university from session
+  
     if (session?.user?.name) {
       setValue("university", session.user.name);
     }
-  }, [editingParticipant, reset, session?.user?.name, setValue]);
+  }, [editingParticipant, reset, session?.user?.name, setValue, lastResponsibility]);
+  
 
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -73,7 +82,7 @@ export function RegistrationForm({ onSubmit, editingParticipant }: RegistrationF
   const onSubmitForm: SubmitHandler<FormInputs> = async (data) => {
     try {
       setIsSubmitting(true);
-
+  
       let photoData = data.photo;
       if (data.photo instanceof FileList) {
         const file = data.photo[0];
@@ -83,37 +92,39 @@ export function RegistrationForm({ onSubmit, editingParticipant }: RegistrationF
           reader.readAsDataURL(file);
         });
       }
-
-      const response = await fetch('/api/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+  
+      const apiUrl = '/api/register';
+      const method = 'POST';
+  
+      const response = await fetch(apiUrl, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          id: editingParticipant?.id,
           fullName: data.fullName,
           phoneNumber: data.phoneNumber,
-          university: session?.user?.name, // Use university from session
+          university: session?.user?.name,
           responsibility: data.responsibility,
           photo: photoData,
         }),
       });
-
-      const result = await response.json();
-
+  
       if (!response.ok) {
-        throw new Error(result.message || 'Registration failed');
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-
-      reset();
+  
+      console.log('Success: Participant updated');
+      setLastResponsibility(data.responsibility); // Update last responsibility after successful submission
+      reset({ responsibility: data.responsibility }); // Reset with the current responsibility
       setPhotoPreview(null);
-
+  
     } catch (error) {
       console.error('Error submitting participant:', error);
     } finally {
       setIsSubmitting(false);
     }
   };
-
+  
   return (
     <form onSubmit={handleSubmit(onSubmitForm)} className="space-y-4">
       <div>
@@ -169,20 +180,27 @@ export function RegistrationForm({ onSubmit, editingParticipant }: RegistrationF
 
       <div>
         <Label htmlFor="responsibility">Responsibility</Label>
-        <Select 
-          onValueChange={(value) => setValue("responsibility", value)} 
-          defaultValue={editingParticipant?.responsibility}
+        <Select
+          onValueChange={(value) => {
+            setValue("responsibility", value);
+            setLastResponsibility(value); // Update last responsibility
+          }}
+          value={watch("responsibility") || lastResponsibility}
         >
           <SelectTrigger>
             <SelectValue placeholder="Select a responsibility" />
           </SelectTrigger>
           <SelectContent>
             {responsibilities.map((resp) => (
-              <SelectItem key={resp} value={resp}>{resp}</SelectItem>
+              <SelectItem key={resp} value={resp}>
+                {resp}
+              </SelectItem>
             ))}
           </SelectContent>
         </Select>
-        {errors.responsibility && <p className="text-red-500 text-xs mt-1">{errors.responsibility.message}</p>}
+        {errors.responsibility && (
+          <p className="text-red-500 text-xs mt-1">{errors.responsibility.message}</p>
+        )}
       </div>
 
       <Button type="submit" disabled={isSubmitting}>
