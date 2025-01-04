@@ -5,21 +5,55 @@ import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import Logo from "./ui/Logo";
 
+const universities = [
+  "Adama University",
+  "Addis Ababa Science and Technology University",
+  "Addis Ababa University",
+  "Adigrat University",
+  "Ambo University",
+  "Arba Minch University",
+  "Arsi University",
+  "Axum University",
+  "Bahir Dar University",
+  "Bule Hora University",
+  "Debre Berhan University",
+  "Debre Markos University",
+  "Dembi Dolo University",
+  "Dilla University",
+  "Dire Dawa University",
+  "Ethiopian Civil Service University",
+  "Haramaya University",
+  "Hawassa University",
+  "Jijiga University",
+  "Jimma University",
+  "Jinka University",
+  "Madda Walabu University",
+  "Mattu University",
+  "Mekelle University",
+  "Mizan–Tepi University",
+  "Samara University",
+  "St. Mary's University",
+  "Unity University",
+  "University of Gondar",
+  "Wachemo University",
+  "Wolkite University",
+  "Wolaita Sodo University",
+  "Wollega University",
+  "Wollo University"
+];
+
 export default function SignUpUniversity() {
   const router = useRouter();
   const { theme } = useTheme(); // Use theme from next-themes
 
-  // State variables for form input and error messages
-  const [universityName, setUniversityName] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [universityName, setUniversityName] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
 
   const handleSignUp = async () => {
-    // Reset error state
     setError(null);
 
-    // Validate input
     if (!universityName || !password || !confirmPassword) {
       setError("All fields are required.");
       return;
@@ -31,16 +65,12 @@ export default function SignUpUniversity() {
     }
 
     try {
-      // Send request to signup API
       const response = await fetch("/api/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          universityName,
-          password,
-        }),
+        body: JSON.stringify({ universityName, password }),
       });
 
       const data = await response.json();
@@ -49,7 +79,6 @@ export default function SignUpUniversity() {
         throw new Error(data.error || "Something went wrong.");
       }
 
-      // Redirect to success page or login page
       router.push("/auth/signin-university");
     } catch (err: any) {
       setError(err.message || "Failed to sign up.");
@@ -86,17 +115,22 @@ export default function SignUpUniversity() {
           >
             {error && <div className="text-red-500 text-sm mb-4">{error}</div>}
             <div className="mb-4">
-              <input
+              <select
                 className={`shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:ring-2 focus:border-transparent transition-colors duration-300 ${
                   isDarkTheme
                     ? "bg-[#373e47] text-white focus:ring-[#5294e2]"
                     : "bg-[#f0f4f8] text-black focus:ring-[#3367d6]"
                 }`}
-                type="text"
-                placeholder="University Name"
                 value={universityName}
                 onChange={(e) => setUniversityName(e.target.value)}
-              />
+              >
+                <option value="">Select your university</option>
+                {universities.map((university) => (
+                  <option key={university} value={university}>
+                    {university}
+                  </option>
+                ))}
+              </select>
             </div>
             <div className="mb-6">
               <input

@@ -133,6 +133,7 @@ export function RegistrationForm({ editingParticipant }: RegistrationFormProps) 
         body: JSON.stringify(payload),
       });
   
+      // Handle response
       if (!response.ok) {
         throw new Error(`Failed to submit form. Status: ${response.status}`);
       }
@@ -162,12 +163,17 @@ export function RegistrationForm({ editingParticipant }: RegistrationFormProps) 
         fileInput.value = '';
       }
   
+      // Update state after success
+      setLastResponsibility(data.responsibility);
+      reset({ responsibility: data.responsibility });
+      setPhotoPreview(null);
     } catch (error) {
       console.error('Error submitting participant:', error);
     } finally {
       setIsSubmitting(false);
     }
   };
+  
   
   return (
     <div className='container mx-auto px-4 py-8 flex flex-col'>
