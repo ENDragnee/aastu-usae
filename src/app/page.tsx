@@ -1,9 +1,9 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
-import { RegistrationForm } from '../components/RegistrationForm';
-import { ParticipantTable } from '../components/ParticipantTable';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { RegistrationForm } from '@/components/RegistrationForm';
+import { ParticipantTable } from '@/components/ParticipantTable';
+import { Users } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 import { Button } from "@/components/ui/button"
 
@@ -16,6 +16,7 @@ interface Participant {
   university: string;
   responsibility: string;
   barcode: string;
+  honor: string;
 }
 
 export default function Home() {
@@ -30,9 +31,6 @@ export default function Home() {
   const fetchParticipants = async () => {
     try {
       const response = await fetch('/api/participants');
-      if (!response.ok) {
-        throw new Error('Failed to fetch participants');
-      }
       const data = await response.json();
       setParticipants(data);
     } catch (error) {
@@ -40,7 +38,7 @@ export default function Home() {
     }
   };
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string) => {
     try {
       const response = await fetch(`/api/participants?id=${id}`, {
         method: 'DELETE',
@@ -58,31 +56,45 @@ export default function Home() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8 text-center flex flex-auto">
-        <p>Sports Festival Management</p>
-        <Button
-          className="ml-auto"
-          onClick={() => signOut()} 
-        >
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold text-center">Sports Festival Management</h1>
+        <Button onClick={() => signOut()} className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">
           Sign Out
         </Button>
-
-      </h1>
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="register">Registration</TabsTrigger>
-          <TabsTrigger value="manage">Manage Participants</TabsTrigger>
-        </TabsList>
-        <TabsContent value="register">
+      </div>
+      <div className="flex justify-center space-x-4 mb-6">
+        <button
+          onClick={() => setActiveTab("register")}
+          className={`px-6 py-3 rounded-lg text-lg font-semibold transition-all duration-300 ease-in-out transform hover:scale-105 ${
+            activeTab === "register"
+              ? "bg-blue-500 text-white shadow-lg"
+              : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+          }`}
+        >
+          Registration
+        </button>
+        <button
+          onClick={() => setActiveTab("manage")}
+          className={`px-6 py-3 rounded-lg text-lg font-semibold transition-all duration-300 ease-in-out transform hover:scale-105 ${
+            activeTab === "manage"
+              ? "bg-green-500 text-white shadow-lg"
+              : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+          }`}
+        >
+          <Users className="w-5 h-5 inline-block mr-2" />
+          Manage Participants
+        </button>
+      </div>
+      <div className="mt-6">
+        {activeTab === "register" && (
           <RegistrationForm editingParticipant={editingParticipant} />
-        </TabsContent>
-        <TabsContent value="manage">
+        )}
+        {activeTab === "manage" && (
           <ParticipantTable
-            participants={participants}
             onDelete={handleDelete}
           />
-        </TabsContent>
-      </Tabs>
+        )}
+      </div>
     </div>
   );
 }

@@ -13,7 +13,7 @@ export async function middleware(request) {
   // Public routes: Authenticated users are redirected to /dashboard
   if (isPublicRoute) {
     if (token) {
-      return NextResponse.redirect(new URL('/dashboard', request.url));
+      return NextResponse.redirect(new URL('/', request.url));
     }
     return NextResponse.next();
   }

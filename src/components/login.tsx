@@ -5,43 +5,7 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import Logo from "./ui/Logo";
-
-const universities = [
-  "Adama University",
-  "Addis Ababa Science and Technology University",
-  "Addis Ababa University",
-  "Adigrat University",
-  "Ambo University",
-  "Arba Minch University",
-  "Arsi University",
-  "Axum University",
-  "Bahir Dar University",
-  "Bule Hora University",
-  "Debre Berhan University",
-  "Debre Markos University",
-  "Dembi Dolo University",
-  "Dilla University",
-  "Dire Dawa University",
-  "Ethiopian Civil Service University",
-  "Haramaya University",
-  "Hawassa University",
-  "Jijiga University",
-  "Jimma University",
-  "Jinka University",
-  "Madda Walabu University",
-  "Mattu University",
-  "Mekelle University",
-  "Mizan–Tepi University",
-  "Samara University",
-  "St. Mary's University",
-  "Unity University",
-  "University of Gondar",
-  "Wachemo University",
-  "Wolkite University",
-  "Wolaita Sodo University",
-  "Wollega University",
-  "Wollo University"
-];
+import { universities } from "../../types/list-of-uni";
 
 export default function SignIn() {
   const [selectedUniversity, setSelectedUniversity] = useState("");
@@ -138,35 +102,15 @@ export default function SignIn() {
               >
                 Sign In
               </button>
-              <a
-                className={`inline-block align-baseline font-bold text-sm transition-colors duration-300 ${
-                  isDarkTheme
-                    ? "text-[#5294e2] hover:text-[#4a84c9]"
-                    : "text-[#3367d6] hover:text-[#2851a3]"
-                }`}
-                href="#"
-              >
-                Forgot Password?
-              </a>
             </div>
           </form>
-          <div className="text-center">
-            <p className="text-sm">
-              Don&apos;t have an account?
-              <button
-                className={`font-bold ml-1 transition-colors duration-300 ${
-                  isDarkTheme
-                    ? "text-[#5294e2] hover:text-[#4a84c9]"
-                    : "text-[#3367d6] hover:text-[#2851a3]"
-                }`}
-                onClick={() => router.push("/auth/signup")}
-              >
-                Sign Up
-              </button>
-            </p>
-          </div>
         </div>
       </div>
+      <footer className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-[#cccccc] text-center text-[#003366] shadow-lg">
+          <p className="text-base font-medium">
+            &copy; ASCII Technologies <span className="text-[#b8860b]">2024</span>
+          </p>
+      </footer>
     </div>
   );
 }

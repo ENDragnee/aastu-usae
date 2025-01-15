@@ -11,10 +11,7 @@ const db = mysql.createPool({
   waitForConnections: true,
   connectionLimit: 20,
   queueLimit: 0,
-  ssl: {
-    ca: caPem,
-    rejectUnauthorized: false
-  },
+  ssl: false,
 });
 
 // Test the connection

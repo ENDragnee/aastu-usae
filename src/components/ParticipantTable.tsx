@@ -35,10 +35,9 @@ interface Participant {
 
 interface ParticipantTableProps {
   onDelete: (id: string) => void;
-  onEdit: (participant: Participant) => void;
 }
 
-export function ParticipantTable({ onDelete, onEdit }: ParticipantTableProps) {
+export function ParticipantTable({ onDelete }: ParticipantTableProps) {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [participants, setParticipants] = useState<Participant[]>([]);
 
@@ -140,6 +139,11 @@ export function ParticipantTable({ onDelete, onEdit }: ParticipantTableProps) {
           ))}
         </TableBody>
       </Table>
+      <footer className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-[#cccccc] text-center text-[#003366] shadow-lg">
+          <p className="text-base font-medium">
+            &copy; ASCII Technologies <span className="text-[#b8860b]">2024</span>
+          </p>
+      </footer>
     </div>
   );
 }
