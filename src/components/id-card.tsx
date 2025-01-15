@@ -11,9 +11,9 @@ export default function IdCard({
   role = 'AT',
   idNumber,
   phone,
-  barcodeValue,
+  honor,
 }: IdCardProps) {
-  const [mounted, setMounted] = useState(false)
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true)

@@ -1,15 +1,34 @@
 "use strict";
-import { NextResponse } from 'next/server'
+import { NextResponse } from 'next/server';
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
 import db from '@/lib/db';
 
 export async function GET() {
   try {
+    // Get the session
+    const session = await getServerSession(authOptions);
+
+    // Check if user is authenticated
+    if (!session) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    // Get participants for the logged-in university
     const [participants] = await db.query(
-      'SELECT p.*, u.name as university_name FROM participant p LEFT JOIN university u ON p.university = u.id'
-    )
-    return NextResponse.json(participants)
+      `SELECT p.*, u.name as university_name 
+       FROM participant p 
+       LEFT JOIN university u ON p.university = u.id 
+       WHERE p.university = ?`,
+      [session.user.id] // Using the university ID from the session
+    );
+    
+
+    return NextResponse.json(participants);
+
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to fetch participants' }, { status: 500 })
+    console.error('Error fetching participants:', error);
+    return NextResponse.json({ error: 'Failed to fetch participants' }, { status: 500 });
   }
 }
 
