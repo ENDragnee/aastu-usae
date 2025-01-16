@@ -37,6 +37,7 @@ const responsibilities = [
 ];
 
 const honor = [
+  "None",
   "PhD", 
 ];
 
@@ -114,7 +115,7 @@ export function RegistrationForm({ editingParticipant }: RegistrationFormProps) 
         phoneNumber: data.phoneNumber,
         university: session?.user?.name,
         responsibility: data.responsibility,
-        honor: data.honor,
+        honor: data.honor!= 'None' ? data.honor : '',
         photo: photoData,
       };
   
@@ -160,7 +161,7 @@ export function RegistrationForm({ editingParticipant }: RegistrationFormProps) 
   };
   
   return (
-    <div>
+    <div className='container mx-auto px-4 py-8 flex flex-col'>
 
       <form onSubmit={handleSubmit(onSubmitForm)} className="space-y-4">
         <div>
@@ -173,7 +174,7 @@ export function RegistrationForm({ editingParticipant }: RegistrationFormProps) 
         </div>
         
         <div>
-          <Label htmlFor="honor">Honorific</Label>
+          <Label htmlFor="honor">Do you have PhD?</Label>
           <Select
             onValueChange={(value) => {
               setValue("honor", value);
@@ -181,7 +182,7 @@ export function RegistrationForm({ editingParticipant }: RegistrationFormProps) 
             value={watch("honor")}
           >
             <SelectTrigger>
-              <SelectValue placeholder="Select an honorific (optional)" />
+              <SelectValue placeholder="(Optional)" />
             </SelectTrigger>
             <SelectContent>
               {honor.map((resp) => (

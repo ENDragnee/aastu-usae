@@ -31,7 +31,7 @@ export const universities = [
     "Jimma University",
     "Jinka University",
     "Kebri Dahar University",
-    "Kotebe University of Education",
+    "Kotebe University",
     "Madda Walabu University",
     "Mattu University",
     "Mekdela Amba University",

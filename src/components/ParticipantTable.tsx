@@ -29,7 +29,6 @@ interface Participant {
   phone_number: string;
   university: string;
   responsibility: string;
-  unique_id: string;
   barcode_id: string;
 }
 
@@ -77,31 +76,30 @@ export function ParticipantTable({ onDelete }: ParticipantTableProps) {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Name</TableHead>
             <TableHead>Photo</TableHead>
+            <TableHead>Name</TableHead>
             <TableHead>Phone</TableHead>
-            <TableHead>University</TableHead>
+            {/* <TableHead>University</TableHead> */}
             <TableHead>Responsibility</TableHead>
             <TableHead>ID</TableHead>
             <TableHead>Barcode</TableHead>
-            <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {participants.map((participant) => (
             <TableRow key={participant.id}>
-              <TableCell>{participant.name}</TableCell>
               <TableCell>
                 <img
                   src={participant.photo}
                   alt={participant.name}
                   className="w-10 h-10 rounded-full object-cover"
-                />
+                  />
               </TableCell>
+              <TableCell>{participant.name}</TableCell>
               <TableCell>{participant.phone_number}</TableCell>
-              <TableCell>{participant.university}</TableCell>
+              {/* <TableCell>{participant.university}</TableCell> */}
               <TableCell>{participant.responsibility}</TableCell>
-              <TableCell>{participant.unique_id}</TableCell>
+              <TableCell>{participant.id}</TableCell>
               <TableCell>{participant.barcode_id}</TableCell>
               <TableCell>
                 <div className="flex space-x-2">
