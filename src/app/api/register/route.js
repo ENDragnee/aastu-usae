@@ -53,12 +53,22 @@ export async function POST(req) {
       [universityId]
     );
 
-    if (participantCount[0].count >= 55) {
+    if (participantCount[0].count >= 55 && university !== "Haramaya University") {
       return new Response(
         JSON.stringify({ 
           error: "Registration limit reached for this university",
           current_count: participantCount[0].count,
           limit: 55
+        }),
+        { status: 400 }
+      );
+    }
+    else if( university === "Haramaya University" && participantCount[0].count >= 75){
+      return new Response(
+        JSON.stringify({ 
+          error: "Registration limit reached for this university",
+          current_count: participantCount[0].count,
+          limit: 75
         }),
         { status: 400 }
       );
