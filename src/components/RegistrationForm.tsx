@@ -22,6 +22,7 @@ type FormInputs = {
   responsibility: string;
   honor: string;
   barcode?: string;
+  gender?: string;
 };
 
 const responsibilities = [
@@ -41,6 +42,11 @@ const honor = [
   "PhD", 
 ];
 
+const gender = [
+  "Female",
+  "Male",
+]
+
 interface RegistrationFormProps {
   editingParticipant?: FormInputs | null;
 }
@@ -51,6 +57,7 @@ export function RegistrationForm({ editingParticipant }: RegistrationFormProps) 
     defaultValues: {
       responsibility: '',
       honor: '',
+      gender: '',
     },
     mode: 'onChange',
     reValidateMode: 'onChange',
@@ -117,6 +124,7 @@ export function RegistrationForm({ editingParticipant }: RegistrationFormProps) 
         responsibility: data.responsibility,
         honor: data.honor!= 'None' ? data.honor : '',
         photo: photoData,
+        gender: data.gender,
       };
   
       const response = await fetch('/api/register', {
@@ -140,6 +148,7 @@ export function RegistrationForm({ editingParticipant }: RegistrationFormProps) 
         photo: '',
         phoneNumber: '',
         honor: '',
+        gender: '',
         university: session?.user?.name || '',
         responsibility: data.responsibility, // Keep the last selected responsibility
       });
@@ -173,6 +182,33 @@ export function RegistrationForm({ editingParticipant }: RegistrationFormProps) 
           {errors.fullName && <p className="text-red-500 text-xs mt-1">{errors.fullName.message}</p>}
         </div>
         
+        <div>
+          <Label htmlFor="gender">Select gender</Label>
+          <Select
+            onValueChange={(value) => {
+              setValue("gender", value);
+            }}
+            value={watch("gender")}
+            {...register("gender", { 
+              required: "Gender is required",
+            })}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select gender" />
+            </SelectTrigger>
+            <SelectContent>
+              {gender.map((resp) => (
+                <SelectItem key={resp} value={resp}>
+                  {resp}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {errors.gender && (
+            <p className="text-red-500 text-xs mt-1">{errors.gender.message}</p>
+          )}
+        </div>
+
         <div>
           <Label htmlFor="honor">Do you have PhD?</Label>
           <Select

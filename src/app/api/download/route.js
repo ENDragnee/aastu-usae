@@ -20,7 +20,7 @@ export async function GET(request) {
       fullName: row.name,
       university: row.university_name,
       role: row.responsibility,
-      idNumber: row.id,
+      idNumber: university,
       phone: row.phone_number,
       barcodeValue: row.barcode_id,
       honor: row.honor,

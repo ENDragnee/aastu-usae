@@ -72,8 +72,8 @@ export default function SignIn() {
               >
                 <option value="">Select University</option>
                 {universities.map((university) => (
-                  <option key={university} value={university}>
-                    {university}
+                  <option key={university.name} value={university.name}>
+                    {university.name}
                   </option>
                 ))}
               </select>
