@@ -3,6 +3,7 @@ import db from "@/lib/db";
 import { promises as fs } from "fs";
 import path from "path";
 import { v4 as uuidv4 } from "uuid";
+import { universities } from "../../../../types/list-of-uni";
 
 const validatePhoneNumber = (phoneNumber) => {
   const phoneRegex = /^\+?[1-9]\d{1,14}$/;
@@ -14,12 +15,19 @@ const validateBase64Photo = (photo) => {
   return base64Regex.test(photo);
 };
 
+const findValue = (university) => {
+  const uni = universities.find((uni) => uni.name === university);
+  return uni ? uni.max : 0;
+}
+
 export async function POST(req) {
   try {
     const body = await req.json();
-    const { fullName, phoneNumber, university, responsibility, photo, honor } = body;
+    const { fullName, phoneNumber, university, responsibility, photo, honor, gender } = body;
 
-    if (!fullName || !phoneNumber || !photo || !university) {
+    // const MAXVALUE = findValue(university);
+
+    if (!fullName || !phoneNumber || !photo || !university || !gender) {
       return new Response(
         JSON.stringify({ error: "Missing required fields" }),
         { status: 400 }
@@ -37,6 +45,11 @@ export async function POST(req) {
       `SELECT id FROM university WHERE name = ?`,
       [university]
     );
+    const [maxUser] = await db.execute(
+      `SELECT maxUser FROM university WHERE name = ?`,
+      [university]
+    );
+    const MAXVALUE = maxUser[0].maxUser;
 
     if (universityRows.length === 0) {
       return new Response(
@@ -53,22 +66,12 @@ export async function POST(req) {
       [universityId]
     );
 
-    if (participantCount[0].count >= 55 && university !== "Haramaya University") {
+    if (participantCount[0].count >= MAXVALUE) {
       return new Response(
         JSON.stringify({ 
           error: "Registration limit reached for this university",
           current_count: participantCount[0].count,
-          limit: 55
-        }),
-        { status: 400 }
-      );
-    }
-    else if( university === "Haramaya University" && participantCount[0].count >= 75){
-      return new Response(
-        JSON.stringify({ 
-          error: "Registration limit reached for this university",
-          current_count: participantCount[0].count,
-          limit: 75
+          limit: MAXVALUE
         }),
         { status: 400 }
       );
@@ -87,8 +90,8 @@ export async function POST(req) {
 
     const [result] = await db.execute(
       `INSERT INTO participant 
-       (name, phone_number, university, responsibility, photo, barcode_id, honor)
-       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+       (name, phone_number, university, responsibility, photo, barcode_id, honor, gender)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         fullName,
         phoneNumber,
@@ -97,6 +100,7 @@ export async function POST(req) {
         `/uploads/${university}/${idCardFilename}`,
         barcode_id,
         honor || null,
+        gender,
       ]
     );
 
