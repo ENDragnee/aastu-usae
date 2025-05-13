@@ -54,8 +54,8 @@ export default function IdCards({ cards }: IdCardsProps) {
                 key={index}
                 className="w-[85.6mm] h-[53.98mm] bg-white shadow-xl rounded-lg overflow-hidden relative"
               >
-                <div className="h-2 bg-gradient-to-r from-[#C5A572] to-[#DBCA9A]" />
-                <div className="w-2 h-full bg-gradient-to-b from-[#C5A572] to-[#DBCA9A] absolute top-0 left-0" />
+                <div className="h-2 bg-gradient-to-r from-purple-950 to-blue-400" />
+                <div className="w-2 h-full bg-gradient-to-b from-purple-950 to-blue-400 absolute top-0 left-0" />
 
                 <div className="p-1.5 flex justify-center items-center text-center bg-white">
                     <Image
@@ -77,8 +77,8 @@ export default function IdCards({ cards }: IdCardsProps) {
                         </h2>
                     </div>
 
-                    <h3 className="text-red-600 text-3xl font-bold tracking-wider">
-                        Coach
+                    <h3 className="text-blue-800 text-3xl font-bold tracking-wider">
+                      Volunteers
                     </h3>
                 </div>
 
@@ -99,9 +99,9 @@ export default function IdCards({ cards }: IdCardsProps) {
                     }}
                   />
                 </div>
-                <div className="w-2 h-full bg-gradient-to-b from-[#C5A572] to-[#DBCA9A] absolute top-0 right-0" />
+                <div className="w-2 h-full bg-gradient-to-b from-purple-950 to-blue-400 absolute top-0 right-0" />
 
-                <div className="h-4 bg-gradient-to-r from-[#C5A572] to-[#DBCA9A] absolute bottom-0 w-full" >
+                <div className="h-4 bg-gradient-to-r from-purple-950 to-blue-500 absolute bottom-0 w-full" >
                     <div className="text-xs font-bold text-gray-100 text-center">
                             2025
                       </div>
