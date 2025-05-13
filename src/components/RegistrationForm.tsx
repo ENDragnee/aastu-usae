@@ -147,8 +147,11 @@ export function RegistrationForm({ editingParticipant }: RegistrationFormProps) 
         fullName: '',
         photo: '',
         phoneNumber: '',
+<<<<<<< HEAD
         honor: '',
         gender: '',
+=======
+>>>>>>> 54171a1 (Final-V2)
         university: session?.user?.name || '',
         responsibility: data.responsibility, // Keep the last selected responsibility
       });
@@ -172,6 +175,7 @@ export function RegistrationForm({ editingParticipant }: RegistrationFormProps) 
   return (
     <div className='container mx-auto px-4 py-8 flex flex-col'>
 
+<<<<<<< HEAD
       <form onSubmit={handleSubmit(onSubmitForm)} className="space-y-4">
         <div>
           <Label htmlFor="fullName">Full Name</Label>
@@ -208,6 +212,36 @@ export function RegistrationForm({ editingParticipant }: RegistrationFormProps) 
             <p className="text-red-500 text-xs mt-1">{errors.gender.message}</p>
           )}
         </div>
+=======
+      <div>
+        <Label htmlFor="photo">Photo Upload</Label>
+        <Input
+          id="photo"
+          type="file"
+          accept="image/*"
+          {...register("photo", { 
+            required: !editingParticipant && "Photo is required",
+            onChange: handlePhotoChange 
+          })}
+        />
+        {errors.photo && <p className="text-red-500 text-xs mt-1">{errors.photo.message}</p>}
+        {photoPreview && (
+          <div className="relative mt-2 w-32 h-32 rounded-full overflow-hidden">
+            <div className="absolute inset-0">
+              <img 
+                src={photoPreview} 
+                alt="Preview" 
+                className="w-full h-full object-cover object-[50%_35%]"
+                style={{
+                  objectFit: 'cover',
+                  objectPosition: '50% 20%'
+                }}
+              />
+            </div>
+          </div>
+        )}
+      </div>
+>>>>>>> 54171a1 (Final-V2)
 
         <div>
           <Label htmlFor="honor">Do you have PhD?</Label>
@@ -259,6 +293,7 @@ export function RegistrationForm({ editingParticipant }: RegistrationFormProps) 
           )}
         </div>
 
+<<<<<<< HEAD
         <div>
           <Label htmlFor="phoneNumber">Phone Number</Label>
           <Input
@@ -273,6 +308,32 @@ export function RegistrationForm({ editingParticipant }: RegistrationFormProps) 
           />
           {errors.phoneNumber && <p className="text-red-500 text-xs mt-1">{errors.phoneNumber.message}</p>}
         </div>
+=======
+      <div>
+        <Label htmlFor="responsibility">Responsibility</Label>
+        <Select
+          onValueChange={(value) => {
+            setValue("responsibility", value);
+            setLastResponsibility(value);
+          }}
+          value={watch("responsibility") || lastResponsibility}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Select a responsibility" />
+          </SelectTrigger>
+          <SelectContent>
+            {responsibilities.map((resp) => (
+              <SelectItem key={resp} value={resp}>
+                {resp}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        {errors.responsibility && (
+          <p className="text-red-500 text-xs mt-1">{errors.responsibility.message}</p>
+        )}
+      </div>
+>>>>>>> 54171a1 (Final-V2)
 
         <div>
           <Label htmlFor="university">University</Label>

@@ -25,9 +25,13 @@ export async function POST(req) {
     const body = await req.json();
     const { fullName, phoneNumber, university, responsibility, photo, honor, gender } = body;
 
+<<<<<<< HEAD
     // const MAXVALUE = findValue(university);
 
     if (!fullName || !phoneNumber || !photo || !university || !gender) {
+=======
+    if (!fullName || !phoneNumber || !photo || !university) {
+>>>>>>> 54171a1 (Final-V2)
       return new Response(
         JSON.stringify({ error: "Missing required fields" }),
         { status: 400 }
@@ -66,12 +70,20 @@ export async function POST(req) {
       [universityId]
     );
 
+<<<<<<< HEAD
     if (participantCount[0].count >= MAXVALUE) {
+=======
+    if (participantCount[0].count >= 55) {
+>>>>>>> 54171a1 (Final-V2)
       return new Response(
         JSON.stringify({ 
           error: "Registration limit reached for this university",
           current_count: participantCount[0].count,
+<<<<<<< HEAD
           limit: MAXVALUE
+=======
+          limit: 55
+>>>>>>> 54171a1 (Final-V2)
         }),
         { status: 400 }
       );
