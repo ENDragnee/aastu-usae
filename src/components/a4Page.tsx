@@ -63,7 +63,6 @@ export default function IdCards({ cards }: IdCardsProps) {
                     />
                   </div>
                 </div>
-<<<<<<< HEAD
                 {/*This is a fast witch to the old img style*/}
                 {/* <div className="flex justify-center p-3">
                   <div className="relative w-32 h-32 rounded-2xl overflow-hidden border-3 border-[#1B3149]">
@@ -88,17 +87,6 @@ export default function IdCards({ cards }: IdCardsProps) {
                         }}
                       />
                     </div>
-=======
-
-                <div className="flex justify-center p-3">
-                  <div className="relative w-32 h-32 rounded-2xl overflow-hidden border-3 border-[#1B3149]">
-                    <img
-                      src={card.photoUrl}
-                      alt={card.fullName}
-                      className="object-cover object-[50%_20%]"
-                      sizes="128px"
-                    />
->>>>>>> 54171a1 (Final-V2)
                   </div>
                 </div>
 
