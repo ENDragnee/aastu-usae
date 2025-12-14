@@ -1,100 +1,94 @@
 'use client'
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { RegistrationForm } from '@/components/RegistrationForm';
 import { ParticipantTable } from '@/components/ParticipantTable';
-import { Users } from 'lucide-react';
+import { Users, UserPlus, LogOut, LayoutDashboard } from 'lucide-react';
 import { signOut } from 'next-auth/react';
-import { Button } from "@/components/ui/button"
-
-
-interface Participant {
-  id: string;
-  fullName: string;
-  photo: string;
-  phoneNumber: string;
-  university: string;
-  responsibility: string;
-  barcode: string;
-  honor: string;
-}
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
 export default function Home() {
-  const [participants, setParticipants] = useState<Participant[]>([]);
-  const [editingParticipant, setEditingParticipant] = useState<Participant | null>(null);
   const [activeTab, setActiveTab] = useState("register");
 
-  useEffect(() => {
-    fetchParticipants();
-  }, []);
-
-  const fetchParticipants = async () => {
-    try {
-      const response = await fetch('/api/participants');
-      const data = await response.json();
-      setParticipants(data);
-    } catch (error) {
-      console.error('Error fetching participants:', error);
-    }
-  };
-
-  const handleDelete = async (id: string) => {
-    try {
-      const response = await fetch(`/api/participants?id=${id}`, {
-        method: 'DELETE',
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to delete participant');
-      }
-
-      fetchParticipants();
-    } catch (error) {
-      console.error('Error deleting participant:', error);
-    }
-  };
-
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-center">Sports Festival Management</h1>
-        <Button onClick={() => signOut()} className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">
-          Sign Out
-        </Button>
-      </div>
-      <div className="flex justify-center space-x-4 mb-6">
-        <button
-          onClick={() => setActiveTab("register")}
-          className={`px-6 py-3 rounded-lg text-lg font-semibold transition-all duration-300 ease-in-out transform hover:scale-105 ${
-            activeTab === "register"
-              ? "bg-blue-500 text-white shadow-lg"
-              : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-          }`}
-        >
-          Registration
-        </button>
-        <button
-          onClick={() => setActiveTab("manage")}
-          className={`px-6 py-3 rounded-lg text-lg font-semibold transition-all duration-300 ease-in-out transform hover:scale-105 ${
-            activeTab === "manage"
-              ? "bg-green-500 text-white shadow-lg"
-              : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-          }`}
-        >
-          <Users className="w-5 h-5 inline-block mr-2" />
-          Manage Participants
-        </button>
-      </div>
-      <div className="mt-6">
-        {activeTab === "register" && (
-          <RegistrationForm editingParticipant={editingParticipant} />
-        )}
-        {activeTab === "manage" && (
-          <ParticipantTable
-            onDelete={handleDelete}
-          />
-        )}
-      </div>
+    <div className="min-h-screen bg-gray-50/50 pb-20">
+      {/* Header */}
+      <header className="bg-white border-b sticky top-0 z-10">
+        <div className="container mx-auto px-4 h-16 flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <LayoutDashboard className="w-6 h-6 text-blue-600" />
+            <h1 className="text-xl font-bold text-gray-800">Sports Festival Manager</h1>
+          </div>
+          <Button
+            onClick={() => signOut()}
+            variant="ghost"
+            className="text-red-600 hover:text-red-700 hover:bg-red-50"
+          >
+            <LogOut className="w-4 h-4 mr-2" />
+            Sign Out
+          </Button>
+        </div>
+      </header>
+
+      <main className="container mx-auto px-4 py-8 max-w-6xl">
+        {/* Tab Navigation */}
+        <div className="grid grid-cols-2 gap-4 mb-8 bg-white p-1 rounded-xl border shadow-sm max-w-md mx-auto">
+          <button
+            onClick={() => setActiveTab("register")}
+            className={`flex items-center justify-center px-6 py-3 rounded-lg text-sm font-semibold transition-all duration-200 ${activeTab === "register"
+                ? "bg-blue-600 text-white shadow-md"
+                : "text-gray-600 hover:bg-gray-100"
+              }`}
+          >
+            <UserPlus className="w-4 h-4 mr-2" />
+            New Registration
+          </button>
+          <button
+            onClick={() => setActiveTab("manage")}
+            className={`flex items-center justify-center px-6 py-3 rounded-lg text-sm font-semibold transition-all duration-200 ${activeTab === "manage"
+                ? "bg-blue-600 text-white shadow-md"
+                : "text-gray-600 hover:bg-gray-100"
+              }`}
+          >
+            <Users className="w-4 h-4 mr-2" />
+            Manage Participants
+          </button>
+        </div>
+
+        {/* Content Area */}
+        <div className="transition-all duration-300 ease-in-out">
+          {activeTab === "register" && (
+            <Card className="border-t-4 border-t-blue-500 shadow-md">
+              <CardHeader>
+                <CardTitle>Registration</CardTitle>
+                <CardDescription>Enter participant details for the sports festival.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <RegistrationForm />
+              </CardContent>
+            </Card>
+          )}
+
+          {activeTab === "manage" && (
+            <Card className="border-t-4 border-t-green-500 shadow-md">
+              <CardHeader>
+                <CardTitle>Participants List</CardTitle>
+                <CardDescription>View and manage registered members.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ParticipantTable />
+              </CardContent>
+            </Card>
+          )}
+        </div>
+      </main>
+
+      <footer className="fixed bottom-0 left-0 right-0 py-3 bg-white border-t border-gray-200 text-center text-sm shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-20">
+        <p className="font-medium text-gray-600">
+          &copy; {new Date().getFullYear()} ASCII Technologies
+        </p>
+      </footer>
     </div>
   );
 }
