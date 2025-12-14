@@ -30,6 +30,7 @@ interface Participant {
   phone_number: string;
   university: string;
   responsibility: string;
+  unique_id: string;
   barcode_id: string;
 }
 
@@ -86,67 +87,17 @@ export function ParticipantTable() {
   };
 
   return (
-    <div className="rounded-md border">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Photo</TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead>Phone</TableHead>
-            {/* <TableHead>University</TableHead> */}
-            <TableHead>Responsibility</TableHead>
-            <TableHead>ID</TableHead>
-            <TableHead>Barcode</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {participants.map((participant) => (
-            <TableRow key={participant.id}>
-              <TableCell>
-                <img
-                  src={participant.photo}
-                  alt={participant.name}
-                  className="w-10 h-10 rounded-full object-cover"
-                  />
-              </TableCell>
-              <TableCell>{participant.name}</TableCell>
-              <TableCell>{participant.phone_number}</TableCell>
-              {/* <TableCell>{participant.university}</TableCell> */}
-              <TableCell>{participant.responsibility}</TableCell>
-              <TableCell>{participant.id}</TableCell>
-              <TableCell>{participant.barcode_id}</TableCell>
-              <TableCell>
-                <div className="flex space-x-2">
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        onClick={() => setDeleteId(participant.id)}
-                      >
-                        Delete
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                        <AlertDialogDescription>
-                          This action cannot be undone. This will permanently delete the participant's
-                          data from our servers.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel onClick={() => setDeleteId(null)}>
-                          Cancel
-                        </AlertDialogCancel>
-                        <AlertDialogAction onClick={handleDelete}>
-                          Continue
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                </div>
-              </TableCell>
+    <div className="space-y-4">
+      <div className="rounded-md border overflow-hidden">
+        <Table>
+          <TableHeader className="bg-gray-50">
+            <TableRow>
+              <TableHead className="w-[80px]">Photo</TableHead>
+              <TableHead>Name</TableHead>
+              <TableHead className="hidden md:table-cell">Responsibility</TableHead>
+              <TableHead className="hidden md:table-cell">Phone</TableHead>
+              <TableHead className="hidden lg:table-cell">ID</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

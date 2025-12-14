@@ -22,22 +22,13 @@ type FormInputs = {
   responsibility: string;
   honor: string;
   barcode?: string;
-  gender?: string;
 };
 
 const responsibilities = [
   "Athlete", "Coach", "Driver", "Guest", "HOD", "Media", "Medical staff", "Support staff", "VIP Guest",
 ];
 
-const honor = [
-  "None",
-  "PhD", 
-];
-
-const gender = [
-  "Female",
-  "Male",
-]
+const honor = ["PhD"];
 
 interface RegistrationFormProps {
   editingParticipant?: FormInputs | null;
@@ -46,11 +37,7 @@ interface RegistrationFormProps {
 export function RegistrationForm({ editingParticipant }: RegistrationFormProps) {
   const { data: session } = useSession();
   const { register, handleSubmit, formState: { errors }, reset, setValue, watch } = useForm<FormInputs>({
-    defaultValues: {
-      responsibility: '',
-      honor: '',
-      gender: '',
-    },
+    defaultValues: { responsibility: '', honor: '' },
     mode: 'onChange',
   });
 
@@ -103,9 +90,8 @@ export function RegistrationForm({ editingParticipant }: RegistrationFormProps) 
         phoneNumber: data.phoneNumber,
         university: session?.user?.name,
         responsibility: data.responsibility,
-        honor: data.honor!= 'None' ? data.honor : '',
+        honor: data.honor,
         photo: photoData,
-        gender: data.gender,
       };
 
       const response = await fetch('/api/register', {
@@ -124,28 +110,6 @@ export function RegistrationForm({ editingParticipant }: RegistrationFormProps) 
         photo: '',
         phoneNumber: '',
         honor: '',
-        gender: '',
-        university: session?.user?.name || '',
-        responsibility: data.responsibility, // Keep the last selected responsibility
-      });
-      
-      // Clear photo preview
-      setPhotoPreview(null);
-      
-      // Reset file input
-      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
-      if (fileInput) {
-        fileInput.value = '';
-      }
-  
-      // Update state after success
-      setLastResponsibility(data.responsibility);
-      
-      // Reset form to initial state
-      reset({
-        fullName: '',
-        photo: '',
-        phoneNumber: '',
         university: session?.user?.name || '',
         responsibility: data.responsibility,
       });
@@ -163,89 +127,19 @@ export function RegistrationForm({ editingParticipant }: RegistrationFormProps) 
   };
 
   return (
-    <div className='container mx-auto px-4 py-8 flex flex-col'>
+    <form onSubmit={handleSubmit(onSubmitForm)} className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 
-      <form onSubmit={handleSubmit(onSubmitForm)} className="space-y-4">
-        <div>
-          <Label htmlFor="fullName">Full Name</Label>
-          <Input
-            id="fullName"
-            {...register("fullName", { required: "Full name is required" })}
-          />
-          {errors.fullName && <p className="text-red-500 text-xs mt-1">{errors.fullName.message}</p>}
-        </div>
-        
-        <div>
-          <Label htmlFor="gender">Select gender</Label>
-          <Select
-            onValueChange={(value) => {
-              setValue("gender", value);
-            }}
-            value={watch("gender")}
-            {...register("gender", { 
-              required: "Gender is required",
-            })}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select gender" />
-            </SelectTrigger>
-            <SelectContent>
-              {gender.map((resp) => (
-                <SelectItem key={resp} value={resp}>
-                  {resp}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          {errors.gender && (
-            <p className="text-red-500 text-xs mt-1">{errors.gender.message}</p>
-          )}
-        </div>
-
-        <div>
-          <Label htmlFor="honor">Do you have PhD?</Label>
-          <Select
-            onValueChange={(value) => {
-              setValue("honor", value);
-            }}
-            value={watch("honor")}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="(Optional)" />
-            </SelectTrigger>
-            <SelectContent>
-              {honor.map((resp) => (
-                <SelectItem key={resp} value={resp}>
-                  {resp}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div>
-          <Label htmlFor="photo">Photo Upload</Label>
-          <Input
-            id="photo"
-            type="file"
-            accept="image/*"
-            {...register("photo", { 
-              required: !editingParticipant && "Photo is required",
-              onChange: handlePhotoChange 
-            })}
-          />
-          {errors.photo && <p className="text-red-500 text-xs mt-1">{errors.photo.message}</p>}
-          {photoPreview && (
-            <div className="relative mt-2 w-32 h-32 rounded-full overflow-hidden">
-              <div className="absolute inset-0">
-                <img 
-                  src={photoPreview} 
-                  alt="Preview" 
-                  className="w-full h-full object-cover object-[50%_35%]"
-                  style={{
-                    objectFit: 'cover',
-                    objectPosition: '50% 20%'
-                  }}
+        {/* Left Column: Photo */}
+        <div className="col-span-1 space-y-4">
+          <Label className="text-base font-semibold">Participant Photo</Label>
+          <div className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-6 bg-gray-50 hover:bg-gray-100 transition-colors">
+            {photoPreview ? (
+              <div className="relative w-40 h-40 rounded-full overflow-hidden shadow-lg mb-4 border-4 border-white">
+                <img
+                  src={photoPreview}
+                  alt="Preview"
+                  className="w-full h-full object-cover"
                 />
               </div>
             ) : (
