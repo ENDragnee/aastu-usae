@@ -1,0 +1,25 @@
+name: usae_one_card_system
+
+services:
+  mariadb:
+    image: mariadb:11.8
+    container_name: usae_one_card_system_db
+    restart: unless-stopped
+    environment:
+      MARIADB_USER: admin
+      MARIADB_PASSWORD: qazwsxedc
+      MARIADB_ROOT_PASSWORD: qazwsxedc
+      MARIADB_DATABASE: usae_one_card_system_db
+    ports:
+      - "3306:3306"
+    volumes:
+      - usae_one_card_system_db_vol:/var/lib/mysql
+    networks:
+      - usae_one_card_system_net
+
+volumes:
+  usae_one_card_system_db_vol:
+
+networks:
+  usae_one_card_system_net:
+    driver: bridge
