@@ -1,10 +1,13 @@
-const REG = 55; const HAR = 75; const DIRE = 65; const MADA = 60;
+const REG = 55;
+const HAR = 75;
+const DIRE = 65;
+const MADA = 60;
 
 export const universities = [
-  { name: "Oda Bultum University", max: REG},
+  { name: "Oda Bultum University", max: REG },
   { name: "Adama Science and Technology University", max: REG },
   { name: "Addis Ababa Science and Technology University", max: REG },
-  { name: "Addis Ababa University", max: REG},
+  { name: "Addis Ababa University", max: REG },
   { name: "Adigrat University", max: REG },
   { name: "Ambo University", max: REG },
   { name: "Arba Minch University", max: REG },
@@ -23,6 +26,7 @@ export const universities = [
   { name: "Debark University", max: REG },
   { name: "Dilla University", max: REG },
   { name: "Dire Dawa University", max: DIRE },
+  { name: "Ethiopian Defence University", max: DIRE },
   { name: "FDRE Technical & Vocational Training Institute", max: REG },
   { name: "Gambella University", max: REG },
   { name: "Gondor University", max: REG },
@@ -38,7 +42,6 @@ export const universities = [
   { name: "Mattu University", max: REG },
   { name: "Mekdela Amba University", max: REG },
   { name: "Mekelle University", max: REG },
-  { name: "Mekelakeya University Ethiopia", max: REG },
   { name: "Mizan–Tepi University", max: REG },
   { name: "Raya University", max: REG },
   { name: "Samara University", max: REG },
@@ -51,3 +54,4 @@ export const universities = [
   { name: "Wollega University", max: REG },
   { name: "Wollo University", max: REG },
 ];
+
